@@ -6,6 +6,8 @@ export interface RecordResp {
   id: string
   labId: string
   userId: string
+  userName: string
+  labName: string
   inspectionDate: string
   door: string
   doorMemo: string
@@ -26,6 +28,8 @@ export interface RecordDetailResp {
   id: string
   labId: string
   userId: string
+  userName: string
+  labName: string
   inspectionDate: string
   door: string
   doorMemo: string
@@ -45,6 +49,8 @@ export interface RecordDetailResp {
 export interface RecordQuery {
   labId: string
   userId: string
+  userName: string
+  labName: string
   inspectionDate: string
   fireDeviceExist: string
   sort: Array<string>

@@ -13,12 +13,12 @@
         @refresh="search"
     >
       <template #custom-left>
-        <a-input v-model="queryForm.labId" placeholder="请输入实验室名称" allow-clear @change="search">
+        <a-input v-model="queryForm.labName" placeholder="请输入实验室名称" allow-clear @change="search">
           <template #prefix>
             <icon-search />
           </template>
         </a-input>
-        <a-input v-model="queryForm.userId" placeholder="请输入用户名称" allow-clear @change="search">
+        <a-input v-model="queryForm.userName" placeholder="请输入用户名称" allow-clear @change="search">
           <template #prefix>
             <icon-search />
           </template>
@@ -28,6 +28,7 @@
             placeholder="请选择检查日期"
             format="YYYY-MM-DD"
             style="width: 100%"
+            @change="search"
         />
         <a-select
             v-model="queryForm.fireDeviceExist"
@@ -107,10 +108,12 @@ import { useDict } from '@/hooks/app'
 defineOptions({ name: 'Record' })
 
 const queryForm = reactive<RecordQuery>({
-  labId: undefined,
-  userId: undefined,
-  inspectionDate: undefined,
-  fireDeviceExist: undefined,
+  labId: '',
+  userId: '',
+  userName: '',
+  labName: '',
+  inspectionDate: '',
+  fireDeviceExist: '',
   sort: ['createTime,desc']
 })
 
@@ -125,9 +128,9 @@ const {
 } = useTable((page) => listRecord({ ...queryForm, ...page }), { immediate: true })
 
 const columns: TableInstanceColumns[] = [
-  { title: '实验室ID', dataIndex: 'labId', slotName: 'labId' },
+  // { title: '实验室ID', dataIndex: 'labId', slotName: 'labId' },
   { title: '实验室名称', dataIndex: 'labName', slotName: 'labName' },
-  { title: '维护人员ID', dataIndex: 'userId', slotName: 'userId' },
+  // { title: '维护人员ID', dataIndex: 'userId', slotName: 'userId' },
   { title: '维护人员姓名', dataIndex: 'userName', slotName: 'userName' },
   { title: '门窗完好及关闭', dataIndex: 'door', slotName: 'door' },
   { title: '门窗完好及关闭情况', dataIndex: 'doorMemo', slotName: 'doorMemo' },
@@ -150,10 +153,12 @@ const columns: TableInstanceColumns[] = [
 
 // 重置
 const reset = () => {
-  queryForm.labId = undefined
-  queryForm.userId = undefined
-  queryForm.inspectionDate = undefined
-  queryForm.fireDeviceExist = undefined
+  queryForm.labId = ''
+  queryForm.userId = ''
+  queryForm.userName = ''
+  queryForm.labName = ''
+  queryForm.inspectionDate = ''
+  queryForm.fireDeviceExist = ''
   search()
 }
 

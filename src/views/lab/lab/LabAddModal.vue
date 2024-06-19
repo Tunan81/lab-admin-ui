@@ -133,8 +133,8 @@ const onUpdate = async (id: string) => {
 const save = async () => {
   try {
     // const isInvalid = await formRef.value?.formRef?.validate()
-    const isInvalid = false
-    if (isInvalid) return false
+    // const isInvalid = false
+    // if (isInvalid) return false
     if (isUpdate.value) {
       // console.log(form.userId)
       await updateLab(form, dataId.value)
