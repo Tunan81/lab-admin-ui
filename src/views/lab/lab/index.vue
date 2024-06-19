@@ -18,7 +18,17 @@
             <icon-search />
           </template>
         </a-input>
-        <a-input v-model="queryForm.userId" placeholder="请输入维护人员ID" allow-clear @change="search">
+        <a-input v-model="queryForm.deptName" placeholder="请输入所属学院" allow-clear @change="search">
+          <template #prefix>
+            <icon-search />
+          </template>
+        </a-input>
+        <a-input v-model="queryForm.buildingName" placeholder="请输入所属建筑名称" allow-clear @change="search">
+          <template #prefix>
+            <icon-search />
+          </template>
+        </a-input>
+        <a-input v-model="queryForm.userName" placeholder="请输入维护人员名称" allow-clear @change="search">
           <template #prefix>
             <icon-search />
           </template>
@@ -75,8 +85,10 @@ import has from '@/utils/has'
 defineOptions({ name: 'Lab' })
 
 const queryForm = reactive<LabQuery>({
-  name: undefined,
-  userId: undefined,
+  name: '',
+  userName: '',
+  buildingName: '',
+  deptName: '',
   sort: ['createTime,desc']
 })
 
@@ -90,6 +102,8 @@ const {
 
 const columns: TableInstanceColumns[] = [
   { title: '名称', dataIndex: 'name', slotName: 'name' },
+  { title: '所属建筑', dataIndex: 'buildingName', slotName: 'buildingName' },
+  { title: '所属部门', dataIndex: 'deptName', slotName: 'deptName' },
   // { title: '维护人员ID', dataIndex: 'userId', slotName: 'userId' },
   { title: '维护人员姓名', dataIndex: 'userName', slotName: 'userName' },
   { title: '修改时间', dataIndex: 'updateTime', slotName: 'updateTime' },
@@ -105,8 +119,10 @@ const columns: TableInstanceColumns[] = [
 
 // 重置
 const reset = () => {
-  queryForm.name = undefined
-  queryForm.userId = undefined
+  queryForm.name = ''
+  queryForm.deptName = ''
+  queryForm.userName = ''
+  queryForm.buildingName = ''
   search()
 }
 

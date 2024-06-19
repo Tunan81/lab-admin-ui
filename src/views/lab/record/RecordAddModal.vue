@@ -47,12 +47,6 @@ const columns: Columns = [
     rules: [{ required: true, message: '请输入实验室id' }]
   },
   {
-    label: '用户id',
-    field: 'userId',
-    type: 'input',
-    rules: [{ required: true, message: '请输入用户id' }]
-  },
-  {
     label: '消防设备是否存在',
     field: 'fireDeviceExist',
     type: 'select',

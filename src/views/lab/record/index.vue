@@ -40,12 +40,12 @@
         <a-button @click="reset">重置</a-button>
       </template>
       <template #custom-right>
-        <a-button v-permission="['lab:record:add']" type="primary" @click="onAdd">
-          <template #icon>
-            <icon-plus />
-          </template>
-          <span>新增</span>
-        </a-button>
+        <!--        <a-button v-permission="['lab:record:add']" type="primary" @click="onAdd"> -->
+        <!--          <template #icon> -->
+        <!--            <icon-plus /> -->
+        <!--          </template> -->
+        <!--          <span>新增</span> -->
+        <!--        </a-button> -->
         <a-tooltip content="导出">
           <a-button v-permission="['lab:record:export']" class="gi_hover_btn-border" @click="onExport">
             <template #icon>
