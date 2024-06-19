@@ -92,18 +92,18 @@ const handleSearch = (value) => {
     window.setTimeout(async () => {
       const res = await selectUserListByName(value)
       options.value = res.data
+      // console.log(111)
+      // console.log(options.value)
       loading.value = false
-    }, 2000)
+    }, 1000)
   } else {
     options.value = []
   }
 }
 
+// 当选项改变时将userId赋值
 const handleChange = (value) => {
-  const selectedUser = options.value.find((item) => item.username === value)
-  if (selectedUser) {
-    form.userId = selectedUser.userId
-  }
+  form.userId = toRaw(value).id
 }
 
 // 重置
@@ -136,7 +136,7 @@ const save = async () => {
     const isInvalid = false
     if (isInvalid) return false
     if (isUpdate.value) {
-      console.log(form.userId)
+      // console.log(form.userId)
       await updateLab(form, dataId.value)
       Message.success('修改成功')
     } else {
