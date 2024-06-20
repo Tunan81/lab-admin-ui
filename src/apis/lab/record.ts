@@ -62,6 +62,11 @@ export function listRecord(query: RecordPageQuery) {
   return http.get<PageRes<RecordResp[]>>(`${BASE_URL}`, query)
 }
 
+/** @desc 查询记录管理列表 */
+export function listRecordByLoginUser(query: RecordPageQuery) {
+  return http.get<PageRes<RecordResp[]>>(`${BASE_URL}/loginUser`, query)
+}
+
 /** @desc 查询记录管理详情 */
 export function getRecord(id: string) {
   return http.get<RecordDetailResp>(`${BASE_URL}/${id}`)

@@ -24,7 +24,7 @@
         <a-form-item field="userId" :style="{ width: '300px' }" label="管理人员">
           <a-select v-model="form.userName" allow-search :filter-option="false" :loading="loading" placeholder="Please select ..."
                      @search="handleSearch" @change="handleChange">
-            <a-option v-for="item of options" v-bind="item.userId" :value="item">{{ item.username }}</a-option>
+            <a-option v-for="item of options" :key="item.userId" :value="item">{{ item.username }}</a-option>
           </a-select>
         </a-form-item>
       </a-space>

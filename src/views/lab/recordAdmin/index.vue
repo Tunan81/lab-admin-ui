@@ -2,7 +2,7 @@
   <div class="table-page">
     <GiTable
         row-key="id"
-        title="记录管理"
+        title="我的记录"
         :data="dataList"
         :columns="columns"
         :loading="loading"
@@ -41,22 +41,12 @@
         <a-button @click="reset">重置</a-button>
       </template>
       <template #custom-right>
-        <!--        <a-button v-permission="['lab:record:add']" type="primary" @click="onAdd"> -->
-        <!--          <template #icon> -->
-        <!--            <icon-plus /> -->
-        <!--          </template> -->
-        <!--          <span>新增</span> -->
-        <!--        </a-button> -->
-        <a-tooltip content="导出">
-          <a-button v-permission="['lab:record:export']" class="gi_hover_btn-border" @click="onExport">
-            <template #icon>
-              <icon-download />
-            </template>
-          </a-button>
-        </a-tooltip>
-      </template>
-      <template #labId="{ record }">
-        <a-link @click="onDetail(record)">{{ record.labId }}</a-link>
+        <a-button v-permission="['lab:record:add']" type="primary" @click="onAdd">
+          <template #icon>
+            <icon-plus />
+          </template>
+          <span>新增</span>
+        </a-button>
       </template>
       <template #action="{ record }">
         <a-space>
@@ -89,23 +79,21 @@
         <a-tag v-else color="green">已处理</a-tag>
       </template>
     </GiTable>
-
-    <RecordAddModal ref="RecordAddModalRef" @save-success="search" />
-    <RecordDetailDrawer ref="RecordDetailDrawerRef" />
+    <LabAdminRecordAddModal ref="RecordAddModalRef" :user-info="userStore.userInfo" @save-success="search" />
   </div>
 </template>
 
 <script setup lang="ts">
-import RecordAddModal from './RecordAddModal.vue'
-import RecordDetailDrawer from './RecordDetailDrawer.vue'
-import { type RecordQuery, type RecordResp, deleteRecord, exportRecord, listRecord } from '@/apis'
+import { type RecordQuery, type RecordResp, deleteRecord, listRecord } from '@/apis'
+import { useDict } from '@/hooks/app'
+import { useTable } from '@/hooks'
 import type { TableInstanceColumns } from '@/components/GiTable/type'
-import { useDownload, useTable } from '@/hooks'
 import { isMobile } from '@/utils'
 import has from '@/utils/has'
-import { useDict } from '@/hooks/app'
+import { useUserStore } from '@/stores'
+import LabAdminRecordAddModal from '@/views/lab/recordAdmin/LabAdminRecordAddModal.vue'
 
-defineOptions({ name: 'Record' })
+defineOptions({ name: 'MyRecord' })
 
 const queryForm = reactive<RecordQuery>({
   labId: '',
@@ -128,10 +116,7 @@ const {
 } = useTable((page) => listRecord({ ...queryForm, ...page }), { immediate: true })
 
 const columns: TableInstanceColumns[] = [
-  // { title: '实验室ID', dataIndex: 'labId', slotName: 'labId' },
   { title: '实验室名称', dataIndex: 'labName', slotName: 'labName' },
-  // { title: '维护人员ID', dataIndex: 'userId', slotName: 'userId' },
-  { title: '维护人员姓名', dataIndex: 'userName', slotName: 'userName' },
   { title: '门窗完好及关闭', dataIndex: 'door', slotName: 'door' },
   { title: '门窗完好及关闭情况', dataIndex: 'doorMemo', slotName: 'doorMemo' },
   { title: '消防设备是否存在', dataIndex: 'fireDeviceExist', slotName: 'fireDeviceExist' },
@@ -170,23 +155,20 @@ const onDelete = (item: RecordResp) => {
   })
 }
 
-// 导出
-const onExport = () => {
-  useDownload(() => exportRecord(queryForm))
-}
+const RecordAddModalRef = ref<InstanceType<typeof LabAdminRecordAddModal>>()
 
-const RecordAddModalRef = ref<InstanceType<typeof RecordAddModal>>()
+const onAdd = () => {
+  RecordAddModalRef.value?.onAdd()
+}
 
 // 修改
 const onUpdate = (item: RecordResp) => {
   RecordAddModalRef.value?.onUpdate(item.id)
 }
 
-const RecordDetailDrawerRef = ref<InstanceType<typeof RecordDetailDrawer>>()
-// 详情
-const onDetail = (item: RecordResp) => {
-  RecordDetailDrawerRef.value?.onDetail(item.id)
-}
+const userStore = useUserStore()
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped lang="scss">
+
+</style>
