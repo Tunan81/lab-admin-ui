@@ -1,40 +1,43 @@
 <template>
   <a-modal
-    v-model:visible="visible"
-    :title="title"
-    :mask-closable="false"
-    :esc-to-close="false"
-    :modal-style="{ maxWidth: '520px' }"
-    width="90%"
-    @before-ok="save"
-    @close="reset"
+      v-model:visible="visible"
+      :title="title"
+      :mask-closable="false"
+      :esc-to-close="false"
+      :modal-style="{ maxWidth: '520px' }"
+      width="90%"
+      @before-ok="save"
+      @close="reset"
   >
-<!--    <GiForm ref="formRef" v-model="form" :options="options" :columns="columns" /> -->
+    <!--    <GiForm ref="formRef" v-model="form" :options="options" :columns="columns" /> -->
     <a-form :model="form" :auto-label-width="true" layout="horizontal">
-      <a-space direction="vertical" size="large" style="align-items: center">
+      <a-space direction="vertical" size="large" style="margin: 0 auto">
         <a-form-item field="name" label="实验室名称">
           <a-input v-model="form.name" placeholder="请输入名称" />
         </a-form-item>
         <a-form-item field="buildingName" label="所属建筑">
           <a-input v-model="form.buildingName" placeholder="请输入所属建筑名称" />
         </a-form-item>
-        <a-form-item field="deptName" label="所属学院">
-          <a-input v-model="form.deptName" placeholder="请输入所属学院名称" />
+        <a-form-item field="deptName" :style="{ width: '300px' }" label="所属学院">
+          <!--          <a-input v-model="form.deptName" placeholder="请输入所属学院名称" /> -->
+          <a-select v-model="form.deptName" placeholder="请选择实验室" allow-search :filter-option="false" :loading="deptLoading" @change="deptHandleChange" @search="deptHandleSearch">
+            <a-option v-for="item of deptOptions" :key="item.id" :value="item.name">{{ item.name }}</a-option>
+          </a-select>
         </a-form-item>
-        <a-form-item field="userId" :style="{ width: '300px' }" label="管理人员">
-          <a-select v-model="form.userName" allow-search :filter-option="false" :loading="loading" placeholder="Please select ..."
-                     @search="handleSearch" @change="handleChange">
+        <a-form-item field="userId" :style="{ width: '300px' }" label="维护人员">
+          <a-select v-model="form.userName" allow-search :filter-option="false" :loading="loading" placeholder="请选择维护人员"
+                    @search="handleSearch" @change="handleChange">
             <a-option v-for="item of options" :key="item.userId" :value="item">{{ item.username }}</a-option>
           </a-select>
         </a-form-item>
       </a-space>
     </a-form>
-</a-modal>
+  </a-modal>
 </template>
 
 <script setup lang="ts">
 import { Message } from '@arco-design/web-vue'
-import { addLab, getLab, selectUserListByName, updateLab } from '@/apis'
+import { addLab, getLab, labListDept, selectUserListByName, updateLab } from '@/apis'
 // import type { type Columns, GiForm, type Options } from '@/components/GiForm'
 
 import { useForm } from '@/hooks'
@@ -80,6 +83,7 @@ const { form, resetForm } = useForm({
   name: '',
   buildingName: '',
   deptName: '',
+  deptId: '',
   userName: ''
 })
 
@@ -101,6 +105,23 @@ const handleSearch = (value) => {
   }
 }
 
+const deptLoading = ref(false)
+const deptOptions = ref()
+const deptHandleSearch = (value) => {
+  if (value) {
+    deptLoading.value = true
+    window.setTimeout(async () => {
+      const res = await labListDept(value)
+      deptOptions.value = res.data
+      // console.log(111)
+      // console.log(options.value)
+      deptLoading.value = false
+    }, 1000)
+  } else {
+    deptOptions.value = []
+  }
+}
+
 // 当选项改变时将userId赋值
 const handleChange = (value) => {
   form.userId = toRaw(value).id
@@ -113,8 +134,9 @@ const reset = () => {
 }
 
 const visible = ref(false)
+
 // 新增
-const onAdd = () => {
+const onAdd = async () => {
   reset()
   dataId.value = ''
   visible.value = true
@@ -135,6 +157,10 @@ const save = async () => {
     // const isInvalid = await formRef.value?.formRef?.validate()
     // const isInvalid = false
     // if (isInvalid) return false
+    if (form.deptId === '' || form.userId === '') {
+      Message.error('请选择部门或用户')
+      return false
+    }
     if (isUpdate.value) {
       // console.log(form.userId)
       await updateLab(form, dataId.value)
@@ -148,6 +174,12 @@ const save = async () => {
   } catch (error) {
     return false
   }
+}
+
+// 当选项改变时将实验室id赋值
+const deptHandleChange = (value) => {
+  form.deptName = toRaw(value).name
+  form.deptId = toRaw(value).id
 }
 
 defineExpose({ onAdd, onUpdate })

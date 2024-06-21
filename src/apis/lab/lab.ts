@@ -38,6 +38,10 @@ export interface LabList {
   id: string
   name: string
 }
+export interface DeptList {
+  id: string
+  name: string
+}
 export interface LabQuery {
   name: string
   userName: string
@@ -54,6 +58,10 @@ export function listLab(query: LabPageQuery) {
 
 export function listLabByLoginUser() {
   return http.get<LabList[]>(`${BASE_URL}/loginUser`)
+}
+
+export function labListDept(deptName: string) {
+  return http.get<DeptList[]>(`${BASE_URL}/dept/${deptName}`)
 }
 
 /** @desc 查询实验室详情 */
